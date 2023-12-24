@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { issueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 // Use an interface to define the shape of form data
 type IssueForm = z.infer<typeof issueSchema>;
@@ -60,11 +61,7 @@ const NewIssuePage = () => {
           {/* name, onChange, onBlue, ref */}
           <TextField.Input {...register("title")} placeholder="Title" />
         </TextField.Root>
-        {errors.title && (
-          <Text color="red" as="p">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         {/* SimpleMED does not support additional props, so cant use `register` */}
         {/* Use the Controller component instead */}
 
@@ -77,11 +74,7 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
-        {errors.description && (
-          <Text color="red" as="p">
-            {errors.description.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button>Submit New Issue</Button>
       </form>
