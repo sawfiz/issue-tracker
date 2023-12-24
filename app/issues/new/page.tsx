@@ -1,8 +1,10 @@
 "use client";
-import { TextField, Button } from "@radix-ui/themes";
+import { useState } from "react";
+import { TextField, Callout, Button } from "@radix-ui/themes";
+import { Cross1Icon } from "@radix-ui/react-icons";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
-import { useForm, useController, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -30,34 +32,50 @@ const NewIssuePage = () => {
 
   const router = useRouter();
 
+  const [error, setError] = useState("");
+
+  const onSubmit = async (data: IssueForm) => {
+    try {
+      await axios.post("/api/issues", data);
+      router.push("/issues");
+    } catch (error) {
+      console.log(error);
+      setError("An unexpected error has occured.");
+    }
+  };
+
   return (
-    <form
-      onSubmit={handleSubmit(async (data) => {
-        await axios.post("/api/issues", data);
-        router.push("/issues");
-      })}
-      className="max-w-xl space-y-3"
-    >
-      <TextField.Root>
-        {/* Use spread operator as `register` returns an object of 4 fields */}
-        {/* name, onChange, onBlue, ref */}
-        <TextField.Input {...register("title")} placeholder="Title" />
-      </TextField.Root>
-      {/* SimpleMED does not support additional props, so cant use `register` */}
-      {/* Use the Controller component instead */}
+    <div className="max-w-xl space-y-3">
+      {error && (
+        <Callout.Root color="red">
+          <Callout.Icon>
+            <Cross1Icon />
+          </Callout.Icon>
+          <Callout.Text>An undexpected error has occured.</Callout.Text>
+        </Callout.Root>
+      )}
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        <TextField.Root>
+          {/* Use spread operator as `register` returns an object of 4 fields */}
+          {/* name, onChange, onBlue, ref */}
+          <TextField.Input {...register("title")} placeholder="Title" />
+        </TextField.Root>
+        {/* SimpleMED does not support additional props, so cant use `register` */}
+        {/* Use the Controller component instead */}
 
-      {/* SimpleMDE does not accept additonal props
+        {/* SimpleMDE does not accept additonal props
       Use Controller to register it with react-hook-form */}
-      <Controller
-        name="description"
-        control={control}
-        render={({ field }) => (
-          <SimpleMDE placeholder="Description" {...field} />
-        )}
-      />
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <SimpleMDE placeholder="Description" {...field} />
+          )}
+        />
 
-      <Button>Submit New Issue</Button>
-    </form>
+        <Button>Submit New Issue</Button>
+      </form>
+    </div>
   );
 };
 
