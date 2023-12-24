@@ -1,18 +1,18 @@
 "use client";
 import { useState } from "react";
-import { TextField, Callout, Button } from "@radix-ui/themes";
+import { TextField, Callout, Button, Text } from "@radix-ui/themes";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { issueSchema } from "@/app/validationSchemas";
+import { z } from "zod";
 
 // Use an interface to define the shape of form data
-interface IssueForm {
-  title: string;
-  description: string;
-}
+type IssueForm = z.infer<typeof issueSchema>;
 
 const NewIssuePage = () => {
   // <> is a `generic` in TypeScript
@@ -28,7 +28,7 @@ const NewIssuePage = () => {
     formState: { errors, isSubmitting },
     reset,
     getValues,
-  } = useForm<IssueForm>();
+  } = useForm<IssueForm>({ resolver: zodResolver(issueSchema) });
 
   const router = useRouter();
 
@@ -60,6 +60,11 @@ const NewIssuePage = () => {
           {/* name, onChange, onBlue, ref */}
           <TextField.Input {...register("title")} placeholder="Title" />
         </TextField.Root>
+        {errors.title && (
+          <Text color="red" as="p">
+            {errors.title.message}
+          </Text>
+        )}
         {/* SimpleMED does not support additional props, so cant use `register` */}
         {/* Use the Controller component instead */}
 
@@ -72,6 +77,11 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
+        {errors.description && (
+          <Text color="red" as="p">
+            {errors.description.message}
+          </Text>
+        )}
 
         <Button>Submit New Issue</Button>
       </form>
