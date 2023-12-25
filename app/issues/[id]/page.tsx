@@ -1,9 +1,8 @@
-import React from "react";
-import prisma from "@/prisma/client";
-import { notFound } from "next/navigation";
-import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
-import delay from "delay";
+import prisma from "@/prisma/client";
+import { Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { notFound } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 
 // For some reason writing this inline cause compile error
 interface Props {
@@ -15,11 +14,10 @@ const IssuesDetailPage = async ({ params }: Props) => {
   if (isNaN(parseInt(params.id))) notFound();
 
   // params is an object {id: "123"}
-  // use parseInt() to convert string to an Int
+  // use parseInt() to convert string to an InNaNt
   const issue = await prisma.issue.findUnique({
     where: { id: parseInt(params.id) },
   });
-  await delay(1000);
 
   // The default not found page
   if (!issue) notFound();
@@ -32,7 +30,9 @@ const IssuesDetailPage = async ({ params }: Props) => {
         <IssueStatusBadge status={issue.status} />
         <Text>{issue.updatedAt.toDateString()}</Text>
       </Flex>
-      <Card>{issue.description}</Card>
+      <Card className="prose lg:prose-xl mt-4">
+        <ReactMarkdown>{issue.description}</ReactMarkdown>
+      </Card>
     </div>
   );
 };
