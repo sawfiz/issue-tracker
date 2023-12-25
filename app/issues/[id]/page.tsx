@@ -1,13 +1,13 @@
 import React from "react";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
-import { Flex, Heading } from "@radix-ui/themes";
+import { Card, Flex, Heading, Text } from "@radix-ui/themes";
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
 import delay from "delay";
 
 // For some reason writing this inline cause compile error
-interface Props  {
-  params: {id: string}
+interface Props {
+  params: { id: string };
 }
 // All the ids in the url is by default string
 const IssuesDetailPage = async ({ params }: Props) => {
@@ -28,12 +28,11 @@ const IssuesDetailPage = async ({ params }: Props) => {
     <div>
       <Heading>{issue.title}</Heading>
 
-      <Flex gap="4">
+      <Flex gap="4" my="2">
         <IssueStatusBadge status={issue.status} />
-        {issue.updatedAt.toDateString()}
+        <Text>{issue.updatedAt.toDateString()}</Text>
       </Flex>
-
-      {issue.description}
+      <Card>{issue.description}</Card>
     </div>
   );
 };
