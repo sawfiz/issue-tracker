@@ -16,7 +16,7 @@ import Spinner from "@/app/components/Spinner";
 // Use an interface to define the shape of form data
 type IssueForm = z.infer<typeof issueSchema>;
 
-const NewIssuePage = () => {
+const NewIssuePage = async () => {
   // <> is a `generic` in TypeScript
   // Passing `IssueForm` as a generic parameter to `useForm()` to specify
   // the shape of the form data that will be managed by `useForm`.
