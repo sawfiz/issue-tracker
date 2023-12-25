@@ -1,5 +1,5 @@
 import { Box, Heading, Flex } from "@radix-ui/themes";
-import Skeleton from "react-loading-skeleton";
+import { Skeleton } from "@/app/components";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const LoadingIssueDetail = () => {
@@ -12,7 +12,7 @@ const LoadingIssueDetail = () => {
         <Skeleton width="3rem" />
         <Skeleton width="8rem" />
       </Flex>
-      <Skeleton count={3}/>
+      <Skeleton count={3} />
     </Box>
   );
 };
