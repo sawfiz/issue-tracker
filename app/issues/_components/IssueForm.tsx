@@ -50,11 +50,11 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     try {
       if (issue) {
         await axios.patch(`/api/issues/${issue.id}`, data);
-        router.push("/issues");
       } else {
         await axios.post("/api/issues", data);
-        router.push("/issues");
       }
+      router.push("/issues");
+      router.refresh();
     } catch (error) {
       console.log(error);
       setError("An unexpected error has occured.");
