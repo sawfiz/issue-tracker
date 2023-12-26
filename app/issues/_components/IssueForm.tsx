@@ -6,6 +6,7 @@ import { Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,7 +30,8 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   // Passing `IssueForm` as a generic parameter to `useForm()` to specify
   // the shape of the form data that will be managed by `useForm`.
   const {
-    // This method allows you to register an input or select element and apply validation rules to React Hook Form.
+    // This method allows you to register an input or select element and apply
+    // validation rules to React Hook Form.
     register,
     // This function will receive the form data if form validation is successful.
     handleSubmit,
@@ -40,18 +42,18 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     getValues,
   } = useForm<IssueFormData>({ resolver: zodResolver(issueSchema) });
 
-  // const router = useRouter();
+  const router = useRouter();
 
   const [error, setError] = useState("");
 
   const onSubmit = async (data: IssueFormData) => {
     try {
       if (issue) {
-        await axios.patch(`/api/issues/${issue.id}/`)
+        await axios.patch(`/api/issues/${issue.id}`, data);
+        router.push("/issues");
       } else {
-
         await axios.post("/api/issues", data);
-        // router.push("/issues");
+        router.push("/issues");
       }
     } catch (error) {
       console.log(error);
@@ -89,16 +91,14 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
           control={control}
           defaultValue={issue?.description}
           render={({ field }) => (
-            <SimpleMDE
-              placeholder="Description"
-              {...field}
-            />
+            <SimpleMDE placeholder="Description" {...field} />
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button disabled={isSubmitting}>
-          Submit {issue? "Edited" : "New" } Issue {isSubmitting && <Spinner />}
+          {issue ? "Update Issue" : "Submit New Issue"}{" "}
+          {isSubmitting && <Spinner />}
         </Button>
       </form>
     </div>
