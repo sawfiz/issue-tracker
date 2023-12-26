@@ -5,10 +5,10 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import { Button, Callout, TextField } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
 import { Spinner } from "../../components";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -16,9 +16,9 @@ import { issueSchema } from "../../validationSchemas";
 
 // Dynamcally load SimpleMDE so it does not cause navigator errors
 // Tell Next.js not to render this on the server
-const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
-  ssr: false,
-});
+// const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+//   ssr: false,
+// });
 
 // Use an interface to define the shape of form data
 type IssueFormData = z.infer<typeof issueSchema>;
