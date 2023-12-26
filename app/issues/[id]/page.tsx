@@ -1,7 +1,11 @@
 import prisma from "@/prisma/client";
-import { Box, Grid } from "@radix-ui/themes";
+import { Box, Flex, Grid } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
-import { IssueDetails, EditIssueButton } from "./_components";
+import {
+  IssueDetails,
+  EditIssueButton,
+  DeleteIssueButton,
+} from "./_components";
 
 // For some reason writing this inline cause compile error
 interface Props {
@@ -24,10 +28,13 @@ const IssuesDetailPage = async ({ params }: Props) => {
   return (
     <Grid columns={{ initial: "1", md: "2" }} gap="5">
       <Box>
-        <IssueDetails issue={issue}/>
+        <IssueDetails issue={issue} />
       </Box>
-      <Box>
-        <EditIssueButton issueId={issue.id} />
+      <Box width="auto">
+        <Flex direction="column" gap="4">
+          <EditIssueButton issueId={issue.id} />
+          <DeleteIssueButton issueId={issue.id} />
+        </Flex>
       </Box>
     </Grid>
   );
