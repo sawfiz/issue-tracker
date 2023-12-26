@@ -20,7 +20,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
     }
   };
   return (
-    <Button onClick={handleSubmit}>
+    <Button color='red' onClick={handleSubmit}>
       <TrashIcon />
       Delete Issue
     </Button>
