@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import LoadIssueDetails from "../_components/LoadIssueDetails"; 
+import LoadIssueDetails from "../_components/IssueFormSkeleton";
 
 // Dynamically load the entire IssueForm
 const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
