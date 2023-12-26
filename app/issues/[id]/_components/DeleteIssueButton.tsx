@@ -1,6 +1,6 @@
 "use client";
 import { TrashIcon } from "@radix-ui/react-icons";
-import { Button } from "@radix-ui/themes";
+import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -20,10 +20,33 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
     }
   };
   return (
-    <Button color='red' onClick={handleSubmit}>
-      <TrashIcon />
-      Delete Issue
-    </Button>
+    <AlertDialog.Root>
+      <AlertDialog.Trigger>
+        <Button color="red">
+          <TrashIcon />
+          Delete Issue
+        </Button>
+      </AlertDialog.Trigger>
+      <AlertDialog.Content style={{ maxWidth: 450 }}>
+        <AlertDialog.Title>Delete Issue</AlertDialog.Title>
+        <AlertDialog.Description size="2">
+          Are you sure? This will permanently delete the issue.
+        </AlertDialog.Description>
+
+        <Flex gap="3" mt="4" justify="end">
+          <AlertDialog.Cancel>
+            <Button variant="soft" color="gray">
+              Cancel
+            </Button>
+          </AlertDialog.Cancel>
+          <AlertDialog.Action>
+            <Button onClick={handleSubmit} variant="solid" color="red">
+              Delete
+            </Button>
+          </AlertDialog.Action>
+        </Flex>
+      </AlertDialog.Content>
+    </AlertDialog.Root>
   );
 };
 
