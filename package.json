@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^1.0.12",
     "@hookform/resolvers": "^3.3.2",
     "@prisma/client": "^5.7.1",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -27,7 +28,6 @@
     "next": "14.0.4",
     "next-auth": "^4.24.5",
     "postcss": "8.4.32",
-    "prisma": "^5.7.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.49.2",
@@ -40,6 +40,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@tailwindcss/typography": "^0.5.10"
+    "@tailwindcss/typography": "^0.5.10",
+    "prisma": "^5.7.1"
   }
 }
