@@ -22,10 +22,10 @@ export default function RootLayout({
     <html lang="en" className="inter.variable">
       <body className={inter.className}>
         <Theme accentColor="violet">
-          <NavBar />
-          <main className="px-5">
-            <Container>{children}</Container>
-          </main>
+            <NavBar />
+            <main className="px-5">
+              <Container>{children}</Container>
+            </main>
         </Theme>
       </body>
     </html>
