@@ -1,24 +1,11 @@
 "use client";
-import { Select } from "@radix-ui/themes";
-// import { User } from "@prisma/client";
-// import { useEffect, useState } from "react";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { User } from "@prisma/client";
 import Skeleton from "@/app/components/Skeleton";
+import { User } from "@prisma/client";
+import { Select } from "@radix-ui/themes";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const AssignSelect = () => {
-  // const [users, setUsers] = useState<User[]>([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const { data } = await axios.get<User[]>("/api/users");
-  //     setUsers(data);
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   const {
     isPending,
     error,
