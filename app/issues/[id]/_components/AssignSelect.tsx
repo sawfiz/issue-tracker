@@ -30,10 +30,10 @@ const AssignSelect = ({ issue }: { issue: Issue }) => {
 
   const handleChange = async (newOwnerId: string) => {
     try {
-      const result = await axios.patch(`/xapi/issues/${issue.id}`, {
+      const result = await axios.patch(`/api/issues/${issue.id}`, {
         ownerId: newOwnerId === "UNASSIGNED" ? null : newOwnerId,
       });
-      router.push("/issues");
+      router.refresh();
     } catch (error) {
       toast.error("Changes could not be saved.");
     }
@@ -43,7 +43,7 @@ const AssignSelect = ({ issue }: { issue: Issue }) => {
     <>
       <Select.Root
         defaultValue={issue.ownerId || ""}
-        onValueChange={(newOwnerId) => handleChange(newOwnerId)}
+        onValueChange={handleChange}
       >
         <Select.Trigger placeholder="Assign Owner"></Select.Trigger>
         <Select.Content>
