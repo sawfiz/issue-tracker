@@ -12,7 +12,7 @@ import SimpleMDE from "react-simplemde-editor";
 import { z } from "zod";
 import { Spinner } from "../../components";
 import ErrorMessage from "../../components/ErrorMessage";
-import { issueSchema } from "../../validationSchemas";
+import { POSTissueSchema } from "../../validationSchemas";
 
 // Dynamcally load SimpleMDE so it does not cause navigator errors
 // Tell Next.js not to render this on the server
@@ -21,7 +21,7 @@ import { issueSchema } from "../../validationSchemas";
 // });
 
 // Use an interface to define the shape of form data
-type IssueFormData = z.infer<typeof issueSchema>;
+type IssueFormData = z.infer<typeof POSTissueSchema>;
 
 // Make issue optional in the type definition
 // As NewIssuePage will not pass in an issue
@@ -40,7 +40,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     formState: { errors, isSubmitting },
     reset,
     getValues,
-  } = useForm<IssueFormData>({ resolver: zodResolver(issueSchema) });
+  } = useForm<IssueFormData>({ resolver: zodResolver(POSTissueSchema) });
 
   const router = useRouter();
 

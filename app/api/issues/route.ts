@@ -1,6 +1,6 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { issueSchema } from "../../validationSchemas";
+import { POSTissueSchema } from "../../validationSchemas";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/auth/authOptions";
 
@@ -13,17 +13,18 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
 
   // Validate the body of the request
-  const validation = issueSchema.safeParse(body);
+  const validation = POSTissueSchema.safeParse(body);
 
   // If validation errors, return errors
   if (!validation.success)
     return NextResponse.json(validation.error.format(), { status: 400 });
 
+  const {title, description} = body;
   // Create a new Issue in the database, return newIssue
   const newIssue = await prisma.issue.create({
     data: {
-      title: body.title,
-      description: body.description,
+      title,
+      description,
     },
   });
   return NextResponse.json(newIssue, { status: 201 });
