@@ -5,7 +5,6 @@ import { Select } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 const AssignSelect = ({ issue }: { issue: Issue }) => {

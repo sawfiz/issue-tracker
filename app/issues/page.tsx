@@ -4,7 +4,6 @@ import { IssueStatusBadge, IssueToolBar, Link } from "@/app/components";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
-  console.log("🚀 ~ file: page.tsx:7 ~ IssuesPage ~ issues:", issues)
 
   return (
     <div>

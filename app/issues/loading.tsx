@@ -1,7 +1,7 @@
-import { Table } from "@radix-ui/themes";
 import { Skeleton } from "@/app/components";
+import { Table } from "@radix-ui/themes";
 import "react-loading-skeleton/dist/skeleton.css";
-import IssueToolBar from "../components/IssueToolBar";
+import IssueToolBar from "./_components/IssueToolBar";
 
 const LoadingIssuesPage = () => {
   const issues = [1, 2, 3, 4, 5];
