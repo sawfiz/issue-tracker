@@ -9,17 +9,20 @@ export async function GET(request: NextRequest) {
   console.log("🚀 ~ file: route.ts:9 ~ GET ~ url:", url)
   const status = url.searchParams.get("status");
   const orderBy = url.searchParams.get("orderBy");
+  const sort = url.searchParams.get("sort");
+  console.log("🚀 ~ file: route.ts:13 ~ GET ~ sort:", sort)
 
   // Validate and handle null or undefined values for status and orderBy
   // Only add status condition if it exists
   const where = status ? { status } : {};
   // Only add orderBy if it exists
-  const orderByParam = orderBy ? { [orderBy]: "asc" } : undefined;
+  const orderByParam = orderBy ? { [orderBy]: sort } : undefined;
 
   try {
     const issues = await prisma.issue.findMany({
       where,
       orderBy: orderByParam,
+    
     });
     return NextResponse.json(issues, { status: 200 });
   } catch (error) {

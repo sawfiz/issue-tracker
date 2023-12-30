@@ -14,13 +14,13 @@ const columns: { label: string; value: keyof Issue; className?: string }[] = [
 interface IssuesTableProps {
   orderBy: keyof Issue | undefined;
   issues: Issue[];
-  handleChange: ({ key, value }: { key: string; value: keyof Issue }) => void;
+  handleChangeSort: ({ orderBy }: { orderBy: keyof Issue | undefined }) => void;
 }
 
 export default function IssuesTable({
   orderBy,
   issues,
-  handleChange,
+  handleChangeSort,
 }: IssuesTableProps) {
   return (
     <Table.Root variant="surface">
@@ -30,7 +30,7 @@ export default function IssuesTable({
             <Table.ColumnHeaderCell key={col.value} className={col.className}>
               <button
                 onClick={() => {
-                  handleChange({ key: "orderBy", value: col.value });
+                  handleChangeSort({ orderBy: col.value });
                 }}
               >
                 {col.label}

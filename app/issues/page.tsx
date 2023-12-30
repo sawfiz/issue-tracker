@@ -9,36 +9,37 @@ import IssuesTable from "./_components/IssuesTable";
 interface searchParams {
   status: Status | undefined;
   orderBy: keyof Issue | undefined;
-  sortDir: "asc" | "desc";
+  sort: "asc" | "desc";
 }
 
 const IssuesPage = () => {
   const [searchParams, setSearchParams] = useState<searchParams>({
     status: undefined,
     orderBy: undefined,
-    sortDir: "asc",
+    sort: "asc",
   });
-  console.log(
-    "🚀 ~ file: page.tsx:33 ~ IssuesPage ~ searchParams:",
-    searchParams
-  );
 
   const handleChangeStatus = ({ status }: { status: Status | undefined }) => {
-    console.log(
-      "🚀 ~ file: page.tsx:27 ~ handleChangeStatus ~ status:",
-      status
-    );
     setSearchParams((prevSearchParams) => ({
       ...prevSearchParams,
-      status: status,
+      status,
     }));
   };
 
-  const handleChangeSort = ({ orderBy }: { orderBy: keyof Issue }) => {
-    setSearchParams((prevSearchParams) => ({
-      ...prevSearchParams,
-      orderBy,
-    }));
+  const handleChangeSort = ({
+    orderBy,
+  }: {
+    orderBy: keyof Issue | undefined;
+  }) => {
+    setSearchParams((prevSearchParams) => {
+      const newSortDir = prevSearchParams.sort === "asc" ? "desc" : "asc";
+
+      return {
+        ...prevSearchParams,
+        orderBy,
+        sort: newSortDir,
+      };
+    });
   };
 
   const {
