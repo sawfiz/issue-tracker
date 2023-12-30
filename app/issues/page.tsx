@@ -1,61 +1,69 @@
-import prisma from "@/prisma/client";
-import { Table } from "@radix-ui/themes";
-import { IssueStatusBadge, IssueToolBar, Link } from "@/app/components";
-import { Status } from "@prisma/client";
+"use client";
+import { IssueToolBar, Skeleton } from "@/app/components";
+import { Issue, Status } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useState } from "react";
+import IssuesTable from "./_components/IssuesTable";
 
-interface Props {
-  searchParams: { status: Status };
+interface searchParams {
+  status: Status | undefined;
+  orderBy: keyof Issue | undefined;
 }
-const IssuesPage = async ({ searchParams }: Props) => {
-  // Returns an array of enumerate values of an object
-  const statuses = Object.values(Status);
-  // Check if searchParams.value is valid
-  const status = statuses.includes(searchParams.status)
-    ? searchParams.status
-    : undefined; // prisma ignores filter with value undefined
-  const issues = await prisma.issue.findMany({
-    where: { status: status },
+
+const IssuesPage = () => {
+
+  const [searchParams, setSearchParams] = useState<searchParams>({
+    status: undefined,
+    orderBy: undefined,
   });
+  console.log(
+    "🚀 ~ file: page.tsx:33 ~ IssuesPage ~ searchParams:",
+    searchParams
+  );
+
+  const handleChange = ({
+    key,
+    value,
+  }: {
+    key: string;
+    value: Status | keyof Issue;
+  }) => {
+    setSearchParams((prevSearchParams) => ({
+      ...prevSearchParams,
+      [key]: value,
+    }));
+  };
+
+  const {
+    isPending,
+    error,
+    data: issues,
+  } = useQuery<Issue[]>({
+    // By passing an array ["issues", searchParams] as the queryKey, 
+    // the useQuery hook will properly identify changes in searchParams 
+    // and trigger a refetch whenever searchParams change.
+    queryKey: ["issues", searchParams],
+    queryFn: () =>
+      axios
+        .get("/api/issues", {
+          params: searchParams,
+        })
+        .then((res) => res.data),
+  });
+
+  if (isPending) return <Skeleton height="2rem" />;
+
+  if (error) {
+    return;
+  }
 
   return (
     <div>
-      <IssueToolBar />
-      <Table.Root variant="surface">
-        <Table.Header>
-          <Table.Row>
-            <Table.ColumnHeaderCell>Issue</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Status
-            </Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell className="hidden md:table-cell">
-              Updated
-            </Table.ColumnHeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {issues.map((issue) => (
-            <Table.Row key={issue.id}>
-              <Table.RowHeaderCell>
-                <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
-                <div className="block md:hidden">
-                  <IssueStatusBadge status={issue.status} />
-                </div>
-              </Table.RowHeaderCell>
-              <Table.Cell className="hidden md:table-cell">
-                <IssueStatusBadge status={issue.status} />
-              </Table.Cell>
-              <Table.Cell className="hidden md:table-cell">
-                {issue.updatedAt.toDateString()}
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
+      <IssueToolBar status={searchParams.status} handleChange={handleChange} />
+      <IssuesTable orderBy={searchParams.orderBy} issues={issues} />
     </div>
   );
 };
-
-// Opt out of static rendering
-export const dynamic = "force-dynamic";
 
 export default IssuesPage;
