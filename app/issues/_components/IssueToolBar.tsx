@@ -6,22 +6,16 @@ import { Issue, Status } from "@prisma/client";
 
 interface IssueToolBarProps {
   status: Status | undefined;
-  handleChange: ({
-    key,
-    value,
-  }: {
-    key: string;
-    value: Status | keyof Issue;
-  }) => void;
+  handleChangeStatus: ({ status }: { status: Status | undefined }) => void;
 }
 
-const IssueToolBar = ({
-  status,
-  handleChange,
-}: IssueToolBarProps) => {
+const IssueToolBar = ({ status, handleChangeStatus }: IssueToolBarProps) => {
   return (
     <Flex justify="between" mb="5">
-      <IssueStatusFilter status={status} handleChange={handleChange} />
+      <IssueStatusFilter
+        status={status}
+        handleChangeStatus={handleChangeStatus}
+      />
       <Button>
         <Link href="/issues/new">New Issue</Link>
       </Button>

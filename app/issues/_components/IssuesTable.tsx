@@ -14,16 +14,27 @@ const columns: { label: string; value: keyof Issue; className?: string }[] = [
 interface IssuesTableProps {
   orderBy: keyof Issue | undefined;
   issues: Issue[];
+  handleChange: ({ key, value }: { key: string; value: keyof Issue }) => void;
 }
 
-export default function IssuesTable({ orderBy, issues }: IssuesTableProps) {
+export default function IssuesTable({
+  orderBy,
+  issues,
+  handleChange,
+}: IssuesTableProps) {
   return (
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
           {columns.map((col) => (
             <Table.ColumnHeaderCell key={col.value} className={col.className}>
-              <button>{col.label}</button>
+              <button
+                onClick={() => {
+                  handleChange({ key: "orderBy", value: col.value });
+                }}
+              >
+                {col.label}
+              </button>
               {/* Show an indicator if a column header is clicked owner */}
               {col.value === orderBy && <ArrowUpIcon className="inline" />}
             </Table.ColumnHeaderCell>

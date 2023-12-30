@@ -9,29 +9,35 @@ import IssuesTable from "./_components/IssuesTable";
 interface searchParams {
   status: Status | undefined;
   orderBy: keyof Issue | undefined;
+  sortDir: "asc" | "desc";
 }
 
 const IssuesPage = () => {
-
   const [searchParams, setSearchParams] = useState<searchParams>({
     status: undefined,
     orderBy: undefined,
+    sortDir: "asc",
   });
   console.log(
     "🚀 ~ file: page.tsx:33 ~ IssuesPage ~ searchParams:",
     searchParams
   );
 
-  const handleChange = ({
-    key,
-    value,
-  }: {
-    key: string;
-    value: Status | keyof Issue;
-  }) => {
+  const handleChangeStatus = ({ status }: { status: Status | undefined }) => {
+    console.log(
+      "🚀 ~ file: page.tsx:27 ~ handleChangeStatus ~ status:",
+      status
+    );
     setSearchParams((prevSearchParams) => ({
       ...prevSearchParams,
-      [key]: value,
+      status: status,
+    }));
+  };
+
+  const handleChangeSort = ({ orderBy }: { orderBy: keyof Issue }) => {
+    setSearchParams((prevSearchParams) => ({
+      ...prevSearchParams,
+      orderBy,
     }));
   };
 
@@ -40,8 +46,8 @@ const IssuesPage = () => {
     error,
     data: issues,
   } = useQuery<Issue[]>({
-    // By passing an array ["issues", searchParams] as the queryKey, 
-    // the useQuery hook will properly identify changes in searchParams 
+    // By passing an array ["issues", searchParams] as the queryKey,
+    // the useQuery hook will properly identify changes in searchParams
     // and trigger a refetch whenever searchParams change.
     queryKey: ["issues", searchParams],
     queryFn: () =>
@@ -60,8 +66,15 @@ const IssuesPage = () => {
 
   return (
     <div>
-      <IssueToolBar status={searchParams.status} handleChange={handleChange} />
-      <IssuesTable orderBy={searchParams.orderBy} issues={issues} />
+      <IssueToolBar
+        status={searchParams.status}
+        handleChangeStatus={handleChangeStatus}
+      />
+      <IssuesTable
+        orderBy={searchParams.orderBy}
+        issues={issues}
+        handleChangeSort={handleChangeSort}
+      />
     </div>
   );
 };

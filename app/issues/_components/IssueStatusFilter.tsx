@@ -15,27 +15,21 @@ const statuses: { label: string; value: Status | "ALL" }[] = [
 
 interface IssueToolBarProps {
   status: Status | undefined;
-  handleChange: ({
-    key,
-    value,
-  }: {
-    key: string;
-    value: Status | keyof Issue;
-  }) => void;
+  handleChangeStatus: ({ status }: { status: Status | undefined }) => void;
 }
 
-const IssueStatusFilter = ({ status, handleChange }: IssueToolBarProps) => {
+const IssueStatusFilter = ({
+  status,
+  handleChangeStatus,
+}: IssueToolBarProps) => {
   const router = useRouter();
   return (
     <Select.Root
       defaultValue={status}
       onValueChange={(selectedStatus: "ALL" | Status) => {
-        // const query =
-        //   selectedStatus === "ALL" ? "" : `?status=${selectedStatus}`;
-        // router.push(`/issues${query}`);
         const query: undefined | Status =
           selectedStatus === "ALL" ? undefined : selectedStatus;
-        handleChange({ key: "status", value: query });
+        handleChangeStatus({status: query});
       }}
     >
       <Select.Trigger placeholder="Filter by status..." />
