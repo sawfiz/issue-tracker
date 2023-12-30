@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
 import IssuesTable from "./_components/IssuesTable";
+import IssuesPageSkeleton from "./_components/IssuesPageSkeleton";
 
 interface searchParams {
   status: Status | undefined;
@@ -59,7 +60,7 @@ const IssuesPage = () => {
         .then((res) => res.data),
   });
 
-  if (isPending) return <Skeleton height="2rem" />;
+  if (isPending) return <IssuesPageSkeleton />;
 
   if (error) {
     return;
