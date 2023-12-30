@@ -74,6 +74,7 @@ const IssuesPage = () => {
       />
       <IssuesTable
         orderBy={searchParams.orderBy}
+        sort={searchParams.sort}
         issues={issues}
         handleChangeSort={handleChangeSort}
       />

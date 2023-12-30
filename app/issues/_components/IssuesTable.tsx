@@ -1,7 +1,7 @@
 "use client";
 import { IssueStatusBadge } from "@/app/components";
 import { Issue } from "@prisma/client";
-import { ArrowUpIcon } from "@radix-ui/react-icons";
+import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
 
@@ -13,12 +13,14 @@ const columns: { label: string; value: keyof Issue; className?: string }[] = [
 
 interface IssuesTableProps {
   orderBy: keyof Issue | undefined;
+  sort: "asc" | "desc";
   issues: Issue[];
   handleChangeSort: ({ orderBy }: { orderBy: keyof Issue | undefined }) => void;
 }
 
 export default function IssuesTable({
   orderBy,
+  sort,
   issues,
   handleChangeSort,
 }: IssuesTableProps) {
@@ -35,8 +37,13 @@ export default function IssuesTable({
               >
                 {col.label}
               </button>
-              {/* Show an indicator if a column header is clicked owner */}
-              {col.value === orderBy && <ArrowUpIcon className="inline" />}
+              {/* Show an indicator if a column header is clicked */}
+              {col.value === orderBy &&
+                (sort === "asc" ? (
+                  <ArrowUpIcon className="inline" />
+                ) : (
+                  <ArrowDownIcon className="inline" />
+                ))}
             </Table.ColumnHeaderCell>
           ))}
         </Table.Row>
