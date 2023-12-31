@@ -1,16 +1,32 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
-import { POSTissueSchema } from "../../validationSchemas";
+import { postIssueSchema } from "../../validationSchemas";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/auth/authOptions";
+import { Issue, Status } from "@prisma/client";
+import { getIssuesSchema } from "../../validationSchemas";
 
 export async function GET(request: NextRequest) {
-  const url = new URL(request.url || "");
-  console.log("🚀 ~ file: route.ts:9 ~ GET ~ url:", url)
-  const status = url.searchParams.get("status");
-  const orderBy = url.searchParams.get("orderBy");
-  const sort = url.searchParams.get("sort");
-  console.log("🚀 ~ file: route.ts:13 ~ GET ~ sort:", sort)
+  const searchParams = request.nextUrl.searchParams;
+
+  // Valid status
+  const { status, orderBy, sort } = {
+    status: searchParams.get('status'),
+    orderBy: searchParams.get('orderBy'),
+    sort: searchParams.get('sort'),
+  };
+  
+  const validation = getIssuesSchema.safeParse({
+    status,
+    orderBy,
+    sort,
+  });
+
+  if (!validation.success)
+    return NextResponse.json(
+      { error: "Invalid key for sorting." },
+      { status: 404 }
+    );
 
   // Validate and handle null or undefined values for status and orderBy
   // Only add status condition if it exists
@@ -22,7 +38,6 @@ export async function GET(request: NextRequest) {
     const issues = await prisma.issue.findMany({
       where,
       orderBy: orderByParam,
-    
     });
     return NextResponse.json(issues, { status: 200 });
   } catch (error) {
