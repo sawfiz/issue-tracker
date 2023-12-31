@@ -4,7 +4,6 @@ import { z } from "zod";
 
 // Validation schema for getting all issues
 // [ 'OPEN', 'IN_PROGRESS', 'CLOSED' ]
-const statusValues = Object.values(Status);
 enum orderByValues {
   Title = 'title',
   Status = 'status',

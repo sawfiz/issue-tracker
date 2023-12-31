@@ -7,15 +7,16 @@ import { Issue, Status } from "@prisma/client";
 import { getIssuesSchema } from "../../validationSchemas";
 
 export async function GET(request: NextRequest) {
+  // Extract search parameters
   const searchParams = request.nextUrl.searchParams;
 
-  // Valid status
   const { status, orderBy, sort } = {
     status: searchParams.get('status'),
     orderBy: searchParams.get('orderBy'),
     sort: searchParams.get('sort'),
   };
   
+  // Valid status
   const validation = getIssuesSchema.safeParse({
     status,
     orderBy,
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
 
   // Validate the body of the request
-  const validation = POSTissueSchema.safeParse(body);
+  const validation = postIssueSchema.safeParse(body);
 
   // If validation errors, return errors
   if (!validation.success)
