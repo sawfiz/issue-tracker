@@ -13,14 +13,14 @@ const columns: { label: string; value: keyof Issue; className?: string }[] = [
   { label: "Updated", value: "updatedAt", className: "hidden md:table-cell" },
 ];
 
-interface searchParams {
+export interface IssueQuery {
   status: Status;
   orderBy: keyof Issue;
   sort: "asc" | "desc";
 }
 
 interface IssuesTableProps {
-  searchParams: searchParams;
+  searchParams: IssueQuery;
   issues: Issue[];
 }
 
@@ -85,3 +85,4 @@ export default function IssuesTable({
     </Table.Root>
   );
 }
+

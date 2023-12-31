@@ -4,15 +4,9 @@ import { Issue, Status } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import IssuesPageSkeleton from "./_components/IssuesPageSkeleton";
-import IssuesTable from "./_components/IssuesTable";
+import IssuesTable,{ IssueQuery }  from "./_components/IssuesTable";
 
-interface searchParams {
-  status: Status | undefined;
-  orderBy: keyof Issue | undefined;
-  sort: "asc" | "desc";
-}
-
-const IssuesPage = ({ searchParams }: { searchParams: searchParams }) => {
+const IssuesPage = ({ searchParams }: { searchParams: IssueQuery }) => {
   const {
     isPending,
     error,
