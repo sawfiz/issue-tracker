@@ -1,6 +1,6 @@
 "use client";
 import { IssueStatusBadge } from "@/app/components";
-import { Issue } from "@prisma/client";
+import { Issue, Status } from "@prisma/client";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
@@ -13,17 +13,23 @@ const columns: { label: string; value: keyof Issue; className?: string }[] = [
   { label: "Updated", value: "updatedAt", className: "hidden md:table-cell" },
 ];
 
+interface searchParams {
+  status: Status;
+  orderBy: keyof Issue;
+  sort: "asc" | "desc";
+}
+
 interface IssuesTableProps {
-  orderBy: keyof Issue | undefined;
+  searchParams: searchParams;
   issues: Issue[];
 }
 
 export default function IssuesTable({
-  orderBy,
+  searchParams,
   issues,
 }: IssuesTableProps) {
   const router = useRouter();
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortOrder, setSortOrder] = useState("asc");
   return (
     <Table.Root variant="surface">
       <Table.Header>
@@ -32,15 +38,23 @@ export default function IssuesTable({
             <Table.ColumnHeaderCell key={col.value} className={col.className}>
               <button
                 onClick={() => {
-                  const newSortOrder = sortOrder === 'asc' ? "desc" : "asc"
-                  setSortOrder(newSortOrder)
-                  router.push('/issues?orderBy=' + col.value + "&sort=" + sortOrder)
+                  const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+                  setSortOrder(newSortOrder);
+
+                  const params = new URLSearchParams();
+                  if (searchParams.status)
+                    params.append("status", searchParams.status);
+                  params.append("orderBy", col.value);
+                  params.append("sort", sortOrder);
+                  const query = params.toString();
+
+                  router.push("/issues?" + query);
                 }}
               >
                 {col.label}
               </button>
               {/* Show an indicator if a column header is clicked */}
-              {col.value === orderBy &&
+              {col.value === searchParams.orderBy &&
                 (sortOrder === "asc" ? (
                   <ArrowDownIcon className="inline" />
                 ) : (

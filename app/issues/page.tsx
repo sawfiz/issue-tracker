@@ -40,7 +40,7 @@ const IssuesPage = ({ searchParams }: { searchParams: searchParams }) => {
     <div>
       <IssueToolBar />
       <IssuesTable
-        orderBy={searchParams.orderBy}
+        searchParams={searchParams}
         issues={issues}
       />
     </div>
