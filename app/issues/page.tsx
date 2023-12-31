@@ -1,11 +1,10 @@
 "use client";
-import { IssueToolBar, Skeleton } from "@/app/components";
+import { IssueToolBar } from "@/app/components";
 import { Issue, Status } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
-import IssuesTable from "./_components/IssuesTable";
 import IssuesPageSkeleton from "./_components/IssuesPageSkeleton";
+import IssuesTable from "./_components/IssuesTable";
 
 interface searchParams {
   status: Status | undefined;
@@ -13,36 +12,7 @@ interface searchParams {
   sort: "asc" | "desc";
 }
 
-const IssuesPage = () => {
-  const [searchParams, setSearchParams] = useState<searchParams>({
-    status: undefined,
-    orderBy: undefined,
-    sort: "asc",
-  });
-
-  const handleChangeStatus = ({ status }: { status: Status | undefined }) => {
-    setSearchParams((prevSearchParams) => ({
-      ...prevSearchParams,
-      status,
-    }));
-  };
-
-  const handleChangeSort = ({
-    orderBy,
-  }: {
-    orderBy: keyof Issue | undefined;
-  }) => {
-    setSearchParams((prevSearchParams) => {
-      const newSortDir = prevSearchParams.sort === "asc" ? "desc" : "asc";
-
-      return {
-        ...prevSearchParams,
-        orderBy,
-        sort: newSortDir,
-      };
-    });
-  };
-
+const IssuesPage = ({ searchParams }: { searchParams: searchParams }) => {
   const {
     isPending,
     error,
@@ -68,15 +38,10 @@ const IssuesPage = () => {
 
   return (
     <div>
-      <IssueToolBar
-        status={searchParams.status}
-        handleChangeStatus={handleChangeStatus}
-      />
+      <IssueToolBar />
       <IssuesTable
         orderBy={searchParams.orderBy}
-        sort={searchParams.sort}
         issues={issues}
-        handleChangeSort={handleChangeSort}
       />
     </div>
   );

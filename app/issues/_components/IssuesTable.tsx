@@ -4,6 +4,8 @@ import { Issue } from "@prisma/client";
 import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const columns: { label: string; value: keyof Issue; className?: string }[] = [
   { label: "Issue", value: "title" },
@@ -13,17 +15,15 @@ const columns: { label: string; value: keyof Issue; className?: string }[] = [
 
 interface IssuesTableProps {
   orderBy: keyof Issue | undefined;
-  sort: "asc" | "desc";
   issues: Issue[];
-  handleChangeSort: ({ orderBy }: { orderBy: keyof Issue | undefined }) => void;
 }
 
 export default function IssuesTable({
   orderBy,
-  sort,
   issues,
-  handleChangeSort,
 }: IssuesTableProps) {
+  const router = useRouter();
+  const [sortOrder, setSortOrder] = useState('asc');
   return (
     <Table.Root variant="surface">
       <Table.Header>
@@ -32,17 +32,19 @@ export default function IssuesTable({
             <Table.ColumnHeaderCell key={col.value} className={col.className}>
               <button
                 onClick={() => {
-                  handleChangeSort({ orderBy: col.value });
+                  const newSortOrder = sortOrder === 'asc' ? "desc" : "asc"
+                  setSortOrder(newSortOrder)
+                  router.push('/issues?orderBy=' + col.value + "&sort=" + sortOrder)
                 }}
               >
                 {col.label}
               </button>
               {/* Show an indicator if a column header is clicked */}
               {col.value === orderBy &&
-                (sort === "asc" ? (
-                  <ArrowUpIcon className="inline" />
-                ) : (
+                (sortOrder === "asc" ? (
                   <ArrowDownIcon className="inline" />
+                ) : (
+                  <ArrowUpIcon className="inline" />
                 ))}
             </Table.ColumnHeaderCell>
           ))}

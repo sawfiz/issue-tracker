@@ -1,8 +1,7 @@
 "use client";
-import { Issue, Status } from "@prisma/client";
+import { Status } from "@prisma/client";
 import { Select } from "@radix-ui/themes";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Type define `statuses` as an object array
 // Each object has a type definition, where `value` is optional
@@ -13,23 +12,18 @@ const statuses: { label: string; value: Status | "ALL" }[] = [
   { label: "Closed", value: "CLOSED" },
 ];
 
-interface IssueToolBarProps {
-  status: Status | undefined;
-  handleChangeStatus: ({ status }: { status: Status | undefined }) => void;
-}
-
-const IssueStatusFilter = ({
-  status,
-  handleChangeStatus,
-}: IssueToolBarProps) => {
+const IssueStatusFilter = () => {
   const router = useRouter();
+  const searchParams = useSearchParams()
   return (
     <Select.Root
-      defaultValue={status}
+      // Retrieve the default value from the URL
+      defaultValue={searchParams.get('status') || ''}
       onValueChange={(selectedStatus: "ALL" | Status) => {
         const query: undefined | Status =
           selectedStatus === "ALL" ? undefined : selectedStatus;
-        handleChangeStatus({status: query});
+        // handleChangeStatus({status: query});
+        router.push('/issues/?status=' + query);
       }}
     >
       <Select.Trigger placeholder="Filter by status..." />
