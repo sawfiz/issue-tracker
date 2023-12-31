@@ -9,14 +9,16 @@ import { getIssuesSchema } from "../../validationSchemas";
 export async function GET(request: NextRequest) {
   // Extract search parameters
   const searchParams = request.nextUrl.searchParams;
-  console.log("🚀 ~ file: route.ts:12 ~ GET ~ searchParams:", searchParams)
+  console.log("🚀 ~ file: route.ts:12 ~ GET ~ searchParams:", searchParams);
 
-  const { status, orderBy, sort } = {
-    status: searchParams.get('status'),
-    orderBy: searchParams.get('orderBy'),
-    sort: searchParams.get('sort'),
+  const { status, orderBy, sort, page, pageSize } = {
+    status: searchParams.get("status"),
+    orderBy: searchParams.get("orderBy"),
+    sort: searchParams.get("sort"),
+    page: searchParams.get("page"),
+    pageSize: searchParams.get("pageSize"),
   };
-  
+
   // Valid status
   const validation = getIssuesSchema.safeParse({
     status,
@@ -37,11 +39,16 @@ export async function GET(request: NextRequest) {
   const orderByParam = orderBy ? { [orderBy]: sort } : undefined;
 
   try {
+    // Get the total number of issue of a give status
+    const count = await prisma.issue.count({where})
+    
     const issues = await prisma.issue.findMany({
       where,
       orderBy: orderByParam,
+      skip: page ? parseInt(pageSize!) * (parseInt(page) - 1) : 0,
+      take: parseInt(pageSize!),
     });
-    return NextResponse.json(issues, { status: 200 });
+    return NextResponse.json({issues, count}, { status: 200 });
   } catch (error) {
     console.log(error);
   }

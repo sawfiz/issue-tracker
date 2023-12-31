@@ -17,6 +17,7 @@ export interface IssueQuery {
   status: Status;
   orderBy: keyof Issue;
   sort: "asc" | "desc";
+  page: string;
 }
 
 interface IssuesTableProps {
