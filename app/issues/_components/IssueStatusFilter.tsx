@@ -14,16 +14,19 @@ const statuses: { label: string; value: Status | "ALL" }[] = [
 
 const IssueStatusFilter = () => {
   const router = useRouter();
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   return (
     <Select.Root
       // Retrieve the default value from the URL
-      defaultValue={searchParams.get('status') || ''}
+      defaultValue={searchParams.get("status") || ""}
       onValueChange={(selectedStatus: "ALL" | Status) => {
-        const query: undefined | Status =
-          selectedStatus === "ALL" ? undefined : selectedStatus;
-        // handleChangeStatus({status: query});
-        router.push('/issues/?status=' + query);
+        const params = new URLSearchParams();
+        if (selectedStatus && selectedStatus !== "ALL")
+          params.append("status", selectedStatus);
+        if (searchParams.get("orderBy"))
+          params.append("orderBy", searchParams.get("orderBy")!);
+        const query = params.size ? "?" + params.toString() : "";
+        router.push("/issues" + query);
       }}
     >
       <Select.Trigger placeholder="Filter by status..." />

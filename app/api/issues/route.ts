@@ -9,6 +9,7 @@ import { getIssuesSchema } from "../../validationSchemas";
 export async function GET(request: NextRequest) {
   // Extract search parameters
   const searchParams = request.nextUrl.searchParams;
+  console.log("🚀 ~ file: route.ts:12 ~ GET ~ searchParams:", searchParams)
 
   const { status, orderBy, sort } = {
     status: searchParams.get('status'),
