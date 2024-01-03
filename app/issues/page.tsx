@@ -1,43 +1,35 @@
-"use client";
+import prisma from "@/prisma/client";
 import { IssueToolBar } from "@/app/components";
-import { Issue } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import IssuesPageSkeleton from "./_components/IssuesPageSkeleton";
-import IssuesTable, { IssueQuery } from "./_components/IssuesTable";
+import { Issue, Prisma, Status } from "@prisma/client";
 import Pagination from "../components/Pagination";
+import IssuesTable, {
+  columnValues,
+} from "./_components/IssuesTable";
+import {  IssueQuery } from "./_components/TableLabel";
 
 const pageSize = 10;
 
-// Define the type for the API response data
-interface ApiResponse {
-  issues: Issue[]; 
-  count: number; 
-}
+const IssuesPage = async ({ searchParams }: { searchParams: IssueQuery }) => {
+  // Create the {where} object to be used by prisma
+  // Primas find ignores a search parameter is it if undefined
+  const statusValues = Object.values(Status);
+  const status = statusValues.includes(searchParams.status)
+    ? searchParams.status
+    : undefined;
+  const where = { status };
 
-const IssuesPage = ({ searchParams }: { searchParams: IssueQuery }) => {
-  const {
-    isPending,
-    error,
-    data: { issues, count } = { issues: [], count: 0 } as ApiResponse,
-  } = useQuery<Issue[]>({
-    // By passing an array ["issues", searchParams] as the queryKey,
-    // the useQuery hook will properly identify changes in searchParams
-    // and trigger a refetch whenever searchParams change.
-    queryKey: ["issues", searchParams],
-    queryFn: () =>
-      axios
-        .get("/api/issues", {
-          params: { ...searchParams, pageSize },
-        })
-        .then((res) => res.data),
-  });
+  // Create the {orderBy} object to be used by prisma
+  // [] is used to get the value of searchParams.orderBy
+  const orderBy = columnValues.includes(searchParams.orderBy)
+  ? {[searchParams.orderBy]: searchParams.sort}
+  : undefined;
 
-  if (isPending) return <IssuesPageSkeleton />;
+  const count = parseInt(searchParams.page) || 1;
 
-  if (error) {
-    return;
-  }
+  const issues = await prisma.issue.findMany({
+    where,
+    orderBy,
+  })
 
   return (
     <div>

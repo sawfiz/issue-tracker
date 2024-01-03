@@ -1,24 +1,17 @@
-"use client";
 import { IssueStatusBadge } from "@/app/components";
 import { Issue, Status } from "@prisma/client";
-import { ArrowDownIcon, ArrowUpIcon } from "@radix-ui/react-icons";
+import { TableLabel, IssueQuery } from "./TableLabel";
+
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 const columns: { label: string; value: keyof Issue; className?: string }[] = [
   { label: "Issue", value: "title" },
   { label: "Status", value: "status", className: "hidden md:table-cell" },
   { label: "Updated", value: "updatedAt", className: "hidden md:table-cell" },
 ];
-
-export interface IssueQuery {
-  status: Status;
-  orderBy: keyof Issue;
-  sort: "asc" | "desc";
-  page: string;
-}
+const columnValues: string[] = columns.map((column) => column.value);
+export { columnValues };
 
 interface IssuesTableProps {
   searchParams: IssueQuery;
@@ -29,38 +22,14 @@ export default function IssuesTable({
   searchParams,
   issues,
 }: IssuesTableProps) {
-  const router = useRouter();
-  const [sortOrder, setSortOrder] = useState("asc");
+  
   return (
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
           {columns.map((col) => (
             <Table.ColumnHeaderCell key={col.value} className={col.className}>
-              <button
-                onClick={() => {
-                  const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
-                  setSortOrder(newSortOrder);
-
-                  const params = new URLSearchParams();
-                  if (searchParams.status)
-                    params.append("status", searchParams.status);
-                  params.append("orderBy", col.value);
-                  params.append("sort", sortOrder);
-                  const query = params.toString();
-
-                  router.push("/issues?" + query);
-                }}
-              >
-                {col.label}
-              </button>
-              {/* Show an indicator if a column header is clicked */}
-              {col.value === searchParams.orderBy &&
-                (sortOrder === "asc" ? (
-                  <ArrowDownIcon className="inline" />
-                ) : (
-                  <ArrowUpIcon className="inline" />
-                ))}
+              <TableLabel searchParams={searchParams} col={col} />
             </Table.ColumnHeaderCell>
           ))}
         </Table.Row>
@@ -86,4 +55,3 @@ export default function IssuesTable({
     </Table.Root>
   );
 }
-
