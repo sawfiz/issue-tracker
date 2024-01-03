@@ -11,6 +11,16 @@ import {
   IssueDetails,
   StatusSelect,
 } from "./_components";
+import { cache } from "react";
+
+// Caching the issue fetched
+// const fetchIssue = cache(async (issueId: number) => {
+//   return await prisma.issue.findUnique({ where: { id: issueId } });
+// });
+/// Simplified version, remove async/await and {}
+const fetchIssue = cache((issueId: number) =>
+  prisma.issue.findUnique({ where: { id: issueId } })
+);
 
 // For some reason writing this inline cause compile error
 interface Props {
@@ -25,9 +35,7 @@ const IssuesDetailPage = async ({ params }: Props) => {
 
   // params is an object {id: "123"}
   // use parseInt() to convert string to an InNaNt
-  const issue = await prisma.issue.findUnique({
-    where: { id: parseInt(params.id) },
-  });
+  const issue = await fetchIssue(parseInt(params.id));
 
   // The default not found page
   if (!issue) notFound();
@@ -54,9 +62,7 @@ const IssuesDetailPage = async ({ params }: Props) => {
 export default IssuesDetailPage;
 
 export async function generateMetadata({ params }: Props) {
-  const issue = await prisma.issue.findUnique({
-    where: { id: parseInt(params.id) },
-  });
+  const issue = await fetchIssue(parseInt(params.id));
 
   return {
     title: `Issue ${issue?.id}: ${issue?.title}`,
