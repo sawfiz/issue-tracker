@@ -5,14 +5,6 @@ import { TableLabel, IssueQuery } from "./TableLabel";
 import { Table } from "@radix-ui/themes";
 import Link from "next/link";
 
-const columns: { label: string; value: keyof Issue; className?: string }[] = [
-  { label: "Issue", value: "title" },
-  { label: "Status", value: "status", className: "hidden md:table-cell" },
-  { label: "Updated", value: "updatedAt", className: "hidden md:table-cell" },
-];
-const columnValues: string[] = columns.map((column) => column.value);
-export { columnValues };
-
 interface IssuesTableProps {
   searchParams: IssueQuery;
   issues: Issue[];
@@ -55,3 +47,11 @@ export default function IssuesTable({
     </Table.Root>
   );
 }
+
+const columns: { label: string; value: keyof Issue; className?: string }[] = [
+  { label: "Issue", value: "title" },
+  { label: "Status", value: "status", className: "hidden md:table-cell" },
+  { label: "Updated", value: "updatedAt", className: "hidden md:table-cell" },
+];
+export const columnValues: string[] = columns.map((column) => column.value);
+
