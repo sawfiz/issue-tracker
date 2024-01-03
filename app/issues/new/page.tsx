@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import IssueFormSkeleton from "../_components/IssueFormSkeleton";
+import { Metadata } from "next";
 
 // Dynamically load the entire IssueForm
 const IssueForm = dynamic(() => import("@/app/issues/_components/IssueForm"), {
@@ -12,3 +13,8 @@ const NewIssuePage = () => {
 };
 
 export default NewIssuePage;
+
+export const metadata: Metadata = {
+  title: "Add a new issue",
+  description: "Create a new issue with a title and detailed descriptions."
+}

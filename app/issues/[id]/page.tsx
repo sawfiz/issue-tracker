@@ -1,16 +1,16 @@
 // @/app/issues/[id]/page.tsx
+import authOptions from "@/app/auth/authOptions";
 import prisma from "@/prisma/client";
 import { Box, Flex, Grid } from "@radix-ui/themes";
+import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import {
-  IssueDetails,
-  EditIssueButton,
-  DeleteIssueButton,
   AssignSelect,
-  StatusSelect
+  DeleteIssueButton,
+  EditIssueButton,
+  IssueDetails,
+  StatusSelect,
 } from "./_components";
-import { getServerSession } from "next-auth";
-import authOptions from "@/app/auth/authOptions";
 
 // For some reason writing this inline cause compile error
 interface Props {
@@ -40,8 +40,8 @@ const IssuesDetailPage = async ({ params }: Props) => {
       {session && (
         <Box width="auto">
           <Flex direction="column" gap="4">
-            <AssignSelect issue ={issue} />
-            <StatusSelect issue={issue}/>
+            <AssignSelect issue={issue} />
+            <StatusSelect issue={issue} />
             <EditIssueButton issueId={issue.id} />
             <DeleteIssueButton issueId={issue.id} />
           </Flex>
@@ -52,3 +52,14 @@ const IssuesDetailPage = async ({ params }: Props) => {
 };
 
 export default IssuesDetailPage;
+
+export async function generateMetadata({ params }: Props) {
+  const issue = await prisma.issue.findUnique({
+    where: { id: parseInt(params.id) },
+  });
+
+  return {
+    title: `Issue ${issue?.id}: ${issue?.title}`,
+    description: `Details of issue ${issue?.id}`,
+  };
+}

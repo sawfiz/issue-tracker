@@ -6,6 +6,7 @@ import IssuesTable, {
   columnValues,
 } from "./_components/IssuesTable";
 import {  IssueQuery } from "./_components/TableLabel";
+import { Metadata } from "next";
 
 const pageSize = 10;
 
@@ -51,3 +52,8 @@ const IssuesPage = async ({ searchParams }: { searchParams: IssueQuery }) => {
 };
 
 export default IssuesPage;
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - Issues List",
+  description: "Issues list that can be filtered and sorted."
+}
