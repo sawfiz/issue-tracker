@@ -40,7 +40,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     formState: { errors, isSubmitting },
     reset,
     getValues,
-  } = useForm<IssueFormData>({ resolver: zodResolver(POSTissueSchema) });
+  } = useForm<IssueFormData>({ resolver: zodResolver(postIssueSchema) });
 
   const router = useRouter();
 
